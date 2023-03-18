@@ -41,8 +41,8 @@ def get_start_node(map):
     print("enter start node. entering convention should be x y where bottom left is the origin. keep space between the cordinate not comma")
     # after entering you should see the node updated on the map
     # start_node = input()
-    # start_node = np.array([50, 110])
-    start_node=[int(j) for j in input().split()]
+    start_node = np.array([50, 110])
+    # start_node=[int(j) for j in input().split()]
     print("start node is")
     print(start_node)
     valid_node=node_validity(map, start_node)
@@ -50,6 +50,7 @@ def get_start_node(map):
         print("node you entered is in obstacle space. plese reenter a valid node")
         start_node=[int(j) for j in input().split()]
         valid_node=node_validity(map, start_node)
+    map[start_node[1], start_node[0]] = (0, 255, 0)
     # cv2.circle(map, (start_node[0], start_node[1]), 0, (0, 255, 0), -1)
     # cv2.imshow('color_map',map)
     # cv2.waitKey(0)
@@ -59,7 +60,7 @@ def get_goal_node(map):
     print("enter goal node. entering convention should be x y where bottom left is the origin. keep space between the cordinate not comma")
     # after entering you should see the node updated on the map
     # start_node = input()
-    goal_node=[int(j) for j in input().split()]
+    # goal_node=[int(j) for j in input().split()]
     # print(start_node)
     goal_node = np.array([200, 200])
     valid_node=node_validity(map, goal_node)
@@ -67,6 +68,8 @@ def get_goal_node(map):
         print("node you entered is in obstacle space. plese reenter a valid node")
         goal_node=[int(j) for j in input().split()]
         valid_node=node_validity(map, goal_node)
+    map[goal_node[1], goal_node[0]] = (0, 0, 255)
+
     # cv2.circle(map, (goal_node[0], goal_node[1]), 1, (0, 0, 255), -1)
     return map, goal_node
 
@@ -86,7 +89,9 @@ def add_node_up(map, parent_node):
     print(child_node)
     if(node_validity(map, child_node)):
         # print("up node can be added")
-        return True
+        map[child_node[1], child_node[0]] = (0, 255, 0)
+        # open_list.append(child_node)
+        return map, True
     else:
         return False
         # print("could not add node up")
@@ -98,7 +103,8 @@ def add_node_down(map, parent_node):
     print(child_node)
     if(node_validity(map, child_node)):
         # print("up node can be added")
-        return True
+        map[child_node[1], child_node[0]] = (0, 255, 0)
+        return map, True
     else:
         return False
         # print("could not add node up")
@@ -110,7 +116,8 @@ def add_node_right(map, parent_node):
     print(child_node)
     if(node_validity(map, child_node)):
         # print("up node can be added")
-        return True
+        map[child_node[1], child_node[0]] = (0, 255, 0)
+        return map, True
     else:
         return False
         # print("could not add node up")
@@ -122,7 +129,8 @@ def add_node_left(map, parent_node):
     print(child_node)
     if(node_validity(map, child_node)):
         # print("up node can be added")
-        return True
+        map[child_node[1], child_node[0]] = (0, 255, 0)
+        return map, True
     else:
         return False
         # print("could not add node up")
@@ -134,7 +142,8 @@ def add_node_right_up(map, parent_node):
     print(child_node)
     if(node_validity(map, child_node)):
         # print("up node can be added")
-        return True
+        map[child_node[1], child_node[0]] = (0, 255, 0)
+        return map, True
     else:
         return False
         # print("could not add node up")
@@ -146,7 +155,8 @@ def add_node_left_up(map, parent_node):
     print(child_node)
     if(node_validity(map, child_node)):
         # print("up node can be added")
-        return True
+        map[child_node[1], child_node[0]] = (0, 255, 0)
+        return map, True
     else:
         return False
         # print("could not add node up")
@@ -158,7 +168,8 @@ def add_node_right_bottom(map, parent_node):
     print(child_node)
     if(node_validity(map, child_node)):
         # print("up node can be added")
-        return True
+        map[child_node[1], child_node[0]] = (0, 255, 0)
+        return map, True
     else:
         return False
         # print("could not add node up")
@@ -170,20 +181,29 @@ def add_node_left_bottom(map, parent_node):
     print(child_node)
     if(node_validity(map, child_node)):
         # print("up node can be added")
-        return True
+        map[child_node[1], child_node[0]] = (0, 255, 0)
+        return map, True
     else:
         return False
         # print("could not add node up")
 
 def explore_map(map, start_node, goal_node):
     print("inside explore")
-    parent_node = start_node
+    # parent_node = start_node
+    open_list = []
+    closed_list = []
+    open_list.append(start_node)
+    parent_node = open_list.pop()
     print(parent_node)
-    node_up = add_node_up(map, parent_node)
-    node_up = add_node_down(map, parent_node)
-    node_up = add_node_right(map, parent_node)
-    node_up = add_node_left(map, parent_node)
-
+    for i in range (0):
+        map, node_up = add_node_up(map, parent_node)
+        map, node_up = add_node_down(map, parent_node)
+        map, node_up = add_node_right(map, parent_node)
+        map, node_up = add_node_left(map, parent_node)
+        map, node_up = add_node_right_up(map, parent_node)
+        map, node_up = add_node_left_up(map, parent_node)
+        map, node_up = add_node_right_bottom(map, parent_node)
+        map, node_up = add_node_left_bottom(map, parent_node)
 map = draw_map()
 # cv2.imshow('map', map)
 map, start_node = get_start_node(map)
