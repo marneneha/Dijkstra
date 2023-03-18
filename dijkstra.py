@@ -34,7 +34,7 @@ def draw_map():
     edged = cv2.Canny(gray, 200, 200, L2gradient =True)
     # find and draw contours
     contours, hierarchy = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(canvas, contours, -1, (0, 255, 0), 3)
+    cv2.drawContours(canvas, contours, -1, (255, 0, 0), 3)
     return canvas
 
 def get_start_node(map):
@@ -42,20 +42,13 @@ def get_start_node(map):
     # after entering you should see the node updated on the map
     # start_node = input()
     start_node=[int(j) for j in input().split()]
-    # print(start_node)
     valid_node=node_validity(map, start_node)
     while(not valid_node):
         print("node you entered is in obstacle space. plese reenter a valid node")
         start_node=[int(j) for j in input().split()]
         valid_node=node_validity(map, start_node)
-    # color_map = cv2.cvtColor(map, cv2.COLOR_GRAY2BGR)
-    cv2.circle(map, (start_node[0], start_node[1]), 3, (255, 0, 0), -1)
+    cv2.circle(map, (start_node[0], start_node[1]), 3, (0, 255, 0), -1)
     # cv2.imshow('color_map',map)
-    # gray_map = cv2.cvtColor(color_map, cv2.COLOR_BGR2GRAY)
-    # cv2.imshow('gray_map',gray_map)
-    # retrun_color_map = cv2.cvtColor(gray_map, cv2.COLOR_GRAY2BGR)
-    # cv2.imshow('retrun_color_map',retrun_color_map)
-    # print("neha here")
     # cv2.waitKey(0)
     return map, start_node
 
@@ -65,32 +58,26 @@ def get_goal_node(map):
     # start_node = input()
     goal_node=[int(j) for j in input().split()]
     # print(start_node)
-    # valid_node=node_validity(map, goal_node)
+    valid_node=node_validity(map, goal_node)
     while(not valid_node):
         print("node you entered is in obstacle space. plese reenter a valid node")
         goal_node=[int(j) for j in input().split()]
         valid_node=node_validity(map, goal_node)
-    cv2.circle(map, (start_node[0], start_node[1]), 2, (255, 0, 0), -1)
+    cv2.circle(map, (goal_node[0], goal_node[1]), 3, (0, 0, 255), -1)
     return map, goal_node
 
 def node_validity(map, node):
-            # if(np.array_equal(transformed_image[row, column], np.array([0, 0, 255]))):
-    # print("node is")
-    # print(node)
-    # print("map value is")
-    # print(map[node[1], node[0]])
-# if(np.array_equal(transformed_image[row, column], np.array([0, 0, 255]))):
     if(np.array_equal(map[node[1], node[0]], np.array([255,255,255]))):
         return True
     else:
         return False
 
 map = draw_map()
-cv2.imshow('map', map)
-map, start_node = get_start_node(map)
-cv2.imshow('map', map)
-# map, goal_node = get_goal_node(map)
 # cv2.imshow('map', map)
+map, start_node = get_start_node(map)
+# cv2.imshow('map', map)
+map, goal_node = get_goal_node(map)
+cv2.imshow('map', map)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows() 
