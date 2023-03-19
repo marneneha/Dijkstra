@@ -45,8 +45,8 @@ def get_start_node(map):
     # start_node = input()
     start_node = np.array([50, 110])
     # start_node=[int(j) for j in input().split()]
-    print("start node is")
-    print(start_node)
+    # print("start node is")
+    # print(start_node)
     valid_node=node_validity(map, start_node)
     while(not valid_node):
         print("node you entered is in obstacle space. plese reenter a valid node")
@@ -76,9 +76,9 @@ def get_goal_node(map):
     return map, goal_node
 
 def node_validity(map, node):
-    print("inside node availability")
-    print(map[node[1], node[0]])
-    print(node)
+    # print("inside node availability")
+    # print(map[node[1], node[0]])
+    # print(node)
     if(np.sum(map[node[1], node[0]])):
         if(np.array_equal(map[node[1], node[0]], np.array([255,255,255]))):
             return True
@@ -90,46 +90,40 @@ def node_validity(map, node):
 def explore_map(map, start_node, goal_node):
     print("inside explore")
     # parent_node = start_node
-    # cost preset node parent node
+    # cost present node parent node
     open_list = [(0, start_node, start_node)]#heap data structure of tuples 
     closed_list = {}#dict
     hq.heapify(open_list)
     # hq.heappush(open_list)
     print(open_list)
+    while(len(open_list)):
     # open_list.append(start_node)
-    # parent_node = open_list.pop()
-    # for i in range (min_OL):
-    #     # explore and update the nbr
-    #     map, node_up = add_node_up(map, parent_node)
-    #     map, node_up = add_node_down(map, parent_node)
-    #     map, node_up = add_node_right(map, parent_node)
-    #     map, node_up = add_node_left(map, parent_node)
-    new_closed_list = open_list.pop()
-    print(new_closed_list)
-    closed_list = dict({(new_closed_list[1][0], new_closed_list[1][1]):new_closed_list[2]})
-    print(closed_list)
-
-    # print(parent_node)
-    # for i in range (0):
-    #     map, node_up = add_node_up(map, parent_node)
-    #     map, node_up = add_node_down(map, parent_node)
-    #     map, node_up = add_node_right(map, parent_node)
-    #     map, node_up = add_node_left(map, parent_node)
-    #     map, node_up = add_node_right_up(map, parent_node)
-    #     map, node_up = add_node_left_up(map, parent_node)
-    #     map, node_up = add_node_right_bottom(map, parent_node)
-    #     map, node_up = add_node_left_bottom(map, parent_node)
+        # newclosed list is a tuple of 3 element
+        new_closed_list_element = open_list.pop()
+        print(new_closed_list_element)
+        closed_list = dict({(new_closed_list_element[1][0], new_closed_list_element[1][1]):new_closed_list_element[2]})
+        print(closed_list)
+        parent_node = new_closed_list_element[1]
+        # explore and update the nbr
+        open_list, map, node_up = add_node_up(open_list, closed_list, map, parent_node)
+        open_list, map, node_up = add_node_down(open_list, closed_list, map, parent_node)
+        open_list, map, node_up = add_node_right(open_list, closed_list, map, parent_node)
+        open_list, map, node_up = add_node_left(open_list, closed_list, map, parent_node)
 
 # only checks if node can be added
-def add_node_up(map, parent_node):
-    # print("checking to add node up")
-    child_node = np.array([parent_node[0], parent_node[1]+1])
+def add_node_up(open_list, closed_list, map, parent_node):
+    print("checking to add node up")
+    child_node = (parent_node[0], parent_node[1]+1)
     print(child_node)
-    if(node_validity(map, child_node)):
+    # if the node is node present in the obstacle space and and is not present in colsed list
+    if(node_validity(map, child_node) and not closed_list.__contains__(child_node) ):
         # print("up node can be added")
         map[child_node[1], child_node[0]] = (0, 255, 0)
-        # open_list.append(child_node)
-        return map, True
+        print("m here")
+        # cost = parent_node[0]+1
+        # new_open_list = (cost, child_node, parent_node)
+        # open_list.append(new_open_list)
+        return open_list, map, True
     else:
         return False
         # print("could not add node up")
