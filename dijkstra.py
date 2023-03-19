@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 import pprint
+import heapq as hq
+
 # global canvas
 def draw_map():
     #upper rectangle
@@ -77,10 +79,46 @@ def node_validity(map, node):
     print("inside node availability")
     print(map[node[1], node[0]])
     print(node)
-    if(np.array_equal(map[node[1], node[0]], np.array([255,255,255]))):
-        return True
+    if(np.sum(map[node[1], node[0]])):
+        if(np.array_equal(map[node[1], node[0]], np.array([255,255,255]))):
+            return True
+        else:
+            return False
     else:
-        return False
+        False
+
+def explore_map(map, start_node, goal_node):
+    print("inside explore")
+    # parent_node = start_node
+    # cost preset node parent node
+    open_list = [(0, start_node, start_node)]#heap data structure of tuples 
+    closed_list = {}#dict
+    hq.heapify(open_list)
+    # hq.heappush(open_list)
+    print(open_list)
+    # open_list.append(start_node)
+    # parent_node = open_list.pop()
+    # for i in range (min_OL):
+    #     # explore and update the nbr
+    #     map, node_up = add_node_up(map, parent_node)
+    #     map, node_up = add_node_down(map, parent_node)
+    #     map, node_up = add_node_right(map, parent_node)
+    #     map, node_up = add_node_left(map, parent_node)
+    new_closed_list = open_list.pop()
+    print(new_closed_list)
+    closed_list = dict({(new_closed_list[1][0], new_closed_list[1][1]):new_closed_list[2]})
+    print(closed_list)
+
+    # print(parent_node)
+    # for i in range (0):
+    #     map, node_up = add_node_up(map, parent_node)
+    #     map, node_up = add_node_down(map, parent_node)
+    #     map, node_up = add_node_right(map, parent_node)
+    #     map, node_up = add_node_left(map, parent_node)
+    #     map, node_up = add_node_right_up(map, parent_node)
+    #     map, node_up = add_node_left_up(map, parent_node)
+    #     map, node_up = add_node_right_bottom(map, parent_node)
+    #     map, node_up = add_node_left_bottom(map, parent_node)
 
 # only checks if node can be added
 def add_node_up(map, parent_node):
@@ -129,6 +167,13 @@ def add_node_left(map, parent_node):
     print(child_node)
     if(node_validity(map, child_node)):
         # print("up node can be added")
+        # add/update cost
+        # if 
+        # child_node.cost = parent_node.cost+1
+        # add/update parent
+        # child_node.parent = parent_node
+        # if the node has not been explored add it to the OL
+        # OL.append(child_node)
         map[child_node[1], child_node[0]] = (0, 255, 0)
         return map, True
     else:
@@ -187,23 +232,9 @@ def add_node_left_bottom(map, parent_node):
         return False
         # print("could not add node up")
 
-def explore_map(map, start_node, goal_node):
-    print("inside explore")
-    # parent_node = start_node
-    open_list = []
-    closed_list = []
-    open_list.append(start_node)
-    parent_node = open_list.pop()
-    print(parent_node)
-    for i in range (0):
-        map, node_up = add_node_up(map, parent_node)
-        map, node_up = add_node_down(map, parent_node)
-        map, node_up = add_node_right(map, parent_node)
-        map, node_up = add_node_left(map, parent_node)
-        map, node_up = add_node_right_up(map, parent_node)
-        map, node_up = add_node_left_up(map, parent_node)
-        map, node_up = add_node_right_bottom(map, parent_node)
-        map, node_up = add_node_left_bottom(map, parent_node)
+
+
+
 map = draw_map()
 # cv2.imshow('map', map)
 map, start_node = get_start_node(map)
