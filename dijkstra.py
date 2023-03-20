@@ -99,29 +99,37 @@ def explore_map(map, start_node, goal_node):
     while(len(open_list)):
     # open_list.append(start_node)
         # newclosed list is a tuple of 3 element
-        new_closed_list_element = open_list.pop()
+        new_closed_list_element = hq.heappop(open_list)
         print(new_closed_list_element)
-        closed_list = dict({(new_closed_list_element[1][0], new_closed_list_element[1][1]):new_closed_list_element[2]})
+        closed_list[tuple(new_closed_list_element[1])]=tuple(new_closed_list_element[2])
         print(closed_list)
         parent_node = new_closed_list_element[1]
+        parent_node_cost = new_closed_list_element[0]
         # explore and update the nbr
-        open_list, map, node_up = add_node_up(open_list, closed_list, map, parent_node)
-        open_list, map, node_up = add_node_down(open_list, closed_list, map, parent_node)
-        open_list, map, node_up = add_node_right(open_list, closed_list, map, parent_node)
-        open_list, map, node_up = add_node_left(open_list, closed_list, map, parent_node)
+        open_list, map, node_up = add_node_up(open_list, closed_list, map, parent_node, parent_node_cost)
+        open_list, map, node_up = add_node_down(open_list, closed_list, map, parent_node, parent_node_cost)
+        open_list, map, node_up = add_node_right(open_list, closed_list, map, parent_node, parent_node_cost)
+        open_list, map, node_up = add_node_left(open_list, closed_list, map, parent_node, parent_node_cost)
 
 # only checks if node can be added
 def add_node_up(open_list, closed_list, map, parent_node):
     print("checking to add node up")
     child_node = (parent_node[0], parent_node[1]+1)
     print(child_node)
-    # if the node is node present in the obstacle space and and is not present in colsed list
+    # if the node is present in the obstacle space and and is not present in closed list
     if(node_validity(map, child_node) and not closed_list.__contains__(child_node) ):
         # print("up node can be added")
         map[child_node[1], child_node[0]] = (0, 255, 0)
-        print("m here")
-        # cost = parent_node[0]+1
-        # new_open_list = (cost, child_node, parent_node)
+        # add /update elemnt in open list
+        new_cost = parent_node[0]+1
+        new_open_list_element = [new_cost, child_node, parent_node]
+        hq.heappush(open_list, new_open_list_element)
+        hq.heapify(open_list)
+        # if (new_cost<child_node[0]):
+            # new_open_list = (new_cost, child_node, parent_node)
+        cv2.imshow('map', map)
+        cv2.waitKey(0)
+        #  print("m here")
         # open_list.append(new_open_list)
         return open_list, map, True
     else:
